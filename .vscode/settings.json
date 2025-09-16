@@ -1,0 +1,19 @@
+{
+  "C_Cpp.intelliSenseEngine": "default",
+  "idf.espIdfPath": "/home/nishi/esp/v5.5/esp-idf",
+  "idf.toolsPath": "/home/nishi/.espressif",
+  "idf.pythonInstallPath": "/usr/bin/python3",
+  "idf.port": "/dev/ttyUSB0",
+  "idf.flashType": "UART",
+  "files.associations": {
+    "chrono": "c",
+    "text_encoding": "c",
+    "typeinfo": "c",
+    "esp_gap_bt_api.h": "c",
+    "gpio_pcm_config.h": "c",
+    "esp_pbac_api.h": "c",
+    "esp_hf_client_api.h": "c",
+    "hfp_codec.h": "c",
+    "hfp.h": "c"
+  }
+}

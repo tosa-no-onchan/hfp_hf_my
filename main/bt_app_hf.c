@@ -209,9 +209,11 @@ static int s_audio_buff_cnt = 0;
 #define WBS_PCM_INPUT_DATA_SIZE  (WBS_PCM_SAMPLING_RATE_KHZ * PCM_BLOCK_DURATION_US / 1000 * BYTES_PER_SAMPLE) //240
 #define PCM_INPUT_DATA_SIZE      (PCM_SAMPLING_RATE_KHZ * PCM_BLOCK_DURATION_US / 1000 * BYTES_PER_SAMPLE)     //120
 
-#define PCM_GENERATOR_TICK_US        (4000)
-//#define PCM_GENERATOR_TICK_US        (3000)
-//#define PCM_GENERATOR_TICK_US        (2000)
+//#define PCM_GENERATOR_TICK_US        (4000)         // 1000 / 4 = 250[Hz]  --> オリジナル値  i2s の速度に対して、遅い
+//#define PCM_GENERATOR_TICK_US        (3773)         // 1000 / 3.773 = 265[Hz]  --> i2s の速度に対して、遅い
+//#define PCM_GENERATOR_TICK_US        (3759)         // 1000 / 3.759 = 266[Hz]  --> i2s に対して、少し遅い。
+#define PCM_GENERATOR_TICK_US        (3745)         // 1000 / 3.745 = 267[Hz]  -->  i2s が少しだけ遅い。 
+//#define PCM_GENERATOR_TICK_US        (3703)         // 1000 / 3.703 = 270[Hz]  --> ちょっと早い!! i2s の速度に対応しているが、送信でエラーがでる。
 // 1000 / 4 = 250[Hz]
 // 16000*2 [Byte] Per Sec のデータを、250[Hz] で送信するには、 1[cycle] でのデータ量は、 128[Byte]
 
@@ -371,8 +373,6 @@ static void bt_app_send_data_task(void *arg)
                     }
                 #endif
 
-                //s_last_enter_time = s_now_enter_time + frame_data_num / WBS_PCM_INPUT_DATA_SIZE * PCM_BLOCK_DURATION_US;
-                s_last_enter_time = s_now_enter_time;
 
                 //ESP_LOGI(BT_HF_TAG, "%s #3 frame_data_num:%d",__func__,frame_data_num);
 
@@ -391,27 +391,36 @@ static void bt_app_send_data_task(void *arg)
                     // Test Audio Data 作成
                     bt_app_hf_create_audio_data(buf, frame_data_num);
                 #else
-                    int limit_cnt = 3;
+                    int limit_cnt = 5;
                     int conv_type=1;
                     int c_cnt=1;
                     size_t bytes_read =i2s_std_getSample(buf,frame_data_num,conv_type);
                     while(bytes_read==0){
-                        t_cnt++;
-                        if(t_cnt > 50){
-                            //vTaskDelay(1);
-                            t_cnt=0;
-                        }
+                        //t_cnt++;
+                        //if(t_cnt > 50){
+                              vTaskDelay(1);
+                        //    t_cnt=0;
+                        //}
                         if(frame_data_num != bytes_read){
                             ESP_LOGI(BT_HF_TAG, "%s #5 bytes_read=%d", __func__,bytes_read);
                         }
                         bytes_read =i2s_std_getSample(buf,frame_data_num,conv_type);
-                        c_cnt++;
-                        if(c_cnt >= limit_cnt)
+                        if(bytes_read >0)
                             break;
-                    }                    
-
+                        c_cnt++;
+                        if(c_cnt >= limit_cnt){
+                            break;
+                        }
+                    }
+                    if(bytes_read==0){
+                        ESP_LOGI(BT_HF_TAG, "%s #5.1 read failed", __func__);
+                        osi_free(buf);
+                        continue;
+                    }              
                 #endif
 
+                //s_last_enter_time = s_now_enter_time + frame_data_num / WBS_PCM_INPUT_DATA_SIZE * PCM_BLOCK_DURATION_US;
+                s_last_enter_time = s_now_enter_time;
 
                 vRingbufferGetInfo(s_m_rb, NULL, NULL, NULL, NULL, &remain_item_size);
 

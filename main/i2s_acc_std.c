@@ -119,11 +119,11 @@ static i2s_chan_handle_t     rx_chan;        // I2S rx channel handler
 static int16_t i2s_readraw_buff[SAMPLE_SIZE];
 
 
-//#define USE_TEST_PRINT
+#define USE_TEST_PRINT
 
 // キューの大きさ
-#define QUEUE_LENGTH 4
-//#define QUEUE_LENGTH 6
+//#define QUEUE_LENGTH 4
+#define QUEUE_LENGTH 8
 //#define QUEUE_LENGTH 2
 // 通常のキュー
 QueueHandle_t xQueue;   // 送信待ちキュー
@@ -394,7 +394,7 @@ int32_t i2s_std_getSample(uint8_t *dt,int32_t dl,int conv_type){
   //}
 
   int n = uxQueueMessagesWaiting(xQueue);
-  #if defined(USE_TEST_PRINT)
+  #if defined(USE_TEST_PRINT_2)
     if(n==0)
       ESP_LOGI(TAG, "%s #1 n: %d", __func__, n);
   #endif

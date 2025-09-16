@@ -8,8 +8,9 @@ Source Microphone  -- ESP-EYE の Mic から、I2S で取り込んでいます�
 
 #### 使い方  
 1. Ubuntu 24.04 PC に、Bluetooth USB ドングルをさして、  
-ペアリングを許可して、電話帳を拒否する。  
-2. サウンド -> 入力 を設定する。
+ESP_HFP_HF ペアリングを許可して、電話帳を拒否する。  
+2. サウンド -> 入力 を設定する。  
+   ◎ ESP_HFP_HF  
 3. PC ターミナルから、
    $ python mic2Speaker.py  
 

@@ -11,7 +11,7 @@ Ubuntu Mate 24.04
 Vscode and ESP-IDF 拡張機能  
 eps-idf v5.5  
 Original Source code  
-Base  
+Base hf sink 部分    
 [@espressif/esp-idf/tree/master/examples/bluetooth/bluedroid/classic_bt/hfp_hf](https://github.com/espressif/esp-idf/tree/master/examples/bluetooth/bluedroid/classic_bt/hfp_hf)  
-Reffer  
+hf source 部分を、一部ポーティングしました。    
 [@espressif/esp-idf/tree/master/examples/bluetooth/bluedroid/classic_bt/hfp_ag](https://github.com/espressif/esp-idf/tree/master/examples/bluetooth/bluedroid/classic_bt/hfp_ag)

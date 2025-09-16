@@ -23,3 +23,6 @@ Base hf sink 部分
 [@espressif/esp-idf/tree/master/examples/bluetooth/bluedroid/classic_bt/hfp_hf](https://github.com/espressif/esp-idf/tree/master/examples/bluetooth/bluedroid/classic_bt/hfp_hf)  
 hf source 部分を、一部ポーティングしました。    
 [@espressif/esp-idf/tree/master/examples/bluetooth/bluedroid/classic_bt/hfp_ag](https://github.com/espressif/esp-idf/tree/master/examples/bluetooth/bluedroid/classic_bt/hfp_ag)
+
+#### 参照  
+[ESP-EYE マイク を bluetooth で、PC につなげて聞きたい。](https://www.netosa.com/blog/2025/08/esp-eye-bluetooth-pc.html)  

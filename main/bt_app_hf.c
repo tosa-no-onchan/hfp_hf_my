@@ -212,7 +212,7 @@ static int s_audio_buff_cnt = 0;
 //#define PCM_GENERATOR_TICK_US        (4000)         // 1000 / 4 = 250[Hz]  --> オリジナル値  i2s の速度に対して、遅い
 //#define PCM_GENERATOR_TICK_US        (3773)         // 1000 / 3.773 = 265[Hz]  --> i2s の速度に対して、遅い
 //#define PCM_GENERATOR_TICK_US        (3759)         // 1000 / 3.759 = 266[Hz]  --> i2s に対して、少し遅い。
-#define PCM_GENERATOR_TICK_US        (3745)         // 1000 / 3.745 = 267[Hz]  -->  i2s が少しだけ遅い。 
+#define PCM_GENERATOR_TICK_US        (3745)         // 1000 / 3.745 = 267[Hz]  -->  i2s が少しだけ遅い。   OK 2025.9.17
 //#define PCM_GENERATOR_TICK_US        (3703)         // 1000 / 3.703 = 270[Hz]  --> ちょっと早い!! i2s の速度に対応しているが、送信でエラーがでる。
 // 1000 / 4 = 250[Hz]
 // 16000*2 [Byte] Per Sec のデータを、250[Hz] で送信するには、 1[cycle] でのデータ量は、 128[Byte]
@@ -391,11 +391,10 @@ static void bt_app_send_data_task(void *arg)
                     // Test Audio Data 作成
                     bt_app_hf_create_audio_data(buf, frame_data_num);
                 #else
-                    int limit_cnt = 5;
+                    int limit_cnt = 3;
                     int conv_type=1;
-                    int c_cnt=1;
                     size_t bytes_read =i2s_std_getSample(buf,frame_data_num,conv_type);
-                    while(bytes_read==0){
+                    for(int c_cnt=1; c_cnt <= limit_cnt && bytes_read==0; c_cnt++){
                         //t_cnt++;
                         //if(t_cnt > 50){
                               vTaskDelay(1);
@@ -405,12 +404,6 @@ static void bt_app_send_data_task(void *arg)
                             ESP_LOGI(BT_HF_TAG, "%s #5 bytes_read=%d", __func__,bytes_read);
                         }
                         bytes_read =i2s_std_getSample(buf,frame_data_num,conv_type);
-                        if(bytes_read >0)
-                            break;
-                        c_cnt++;
-                        if(c_cnt >= limit_cnt){
-                            break;
-                        }
                     }
                     if(bytes_read==0){
                         ESP_LOGI(BT_HF_TAG, "%s #5.1 read failed", __func__);
@@ -474,8 +467,8 @@ void bt_app_send_data(void)
     i2s_std_start();
 
     s_send_data_Semaphore = xSemaphoreCreateBinary();
-    //xTaskCreate(bt_app_send_data_task, "BtAppSendDataTask", 2048, NULL, configMAX_PRIORITIES - 3, &s_bt_app_send_data_task_handler);
-    xTaskCreate(bt_app_send_data_task, "BtAppSendDataTask", 4096, NULL, configMAX_PRIORITIES - 3, &s_bt_app_send_data_task_handler);
+    //xTaskCreate(bt_app_send_data_task, "BtAppSendDataTask", 4096, NULL, configMAX_PRIORITIES - 3, &s_bt_app_send_data_task_handler);
+    xTaskCreate(bt_app_send_data_task, "BtAppSendDataTask", 4096, NULL, configMAX_PRIORITIES - 2, &s_bt_app_send_data_task_handler);
     s_m_rb = xRingbufferCreate(ESP_HFP_RINGBUF_SIZE, RINGBUF_TYPE_BYTEBUF);
     const esp_timer_create_args_t c_periodic_timer_args = {
             .callback = &bt_app_send_data_timer_cb,

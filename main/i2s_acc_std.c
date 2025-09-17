@@ -122,8 +122,7 @@ static int16_t i2s_readraw_buff[SAMPLE_SIZE];
 #define USE_TEST_PRINT
 
 // キューの大きさ
-//#define QUEUE_LENGTH 4
-#define QUEUE_LENGTH 8
+#define QUEUE_LENGTH 4
 //#define QUEUE_LENGTH 2
 // 通常のキュー
 QueueHandle_t xQueue;   // 送信待ちキュー

@@ -1,5 +1,7 @@
 # hfp_hf_my  
 Bluetooth HF(Hand Free) Profile Sample program.  
+  
+##### ESP-EYE Microphone bluetooth hfp client (source Microphone and sink Speaker) program.  
 
 ESP-EYE の Microphone を、PC で聞きたくてつくてみました。  
 Bluetooth Classic hfp client プログラムです。  
